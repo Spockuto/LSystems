@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>L Systems Generator</title>
+	<link rel="stylesheet" type="text/css" href="./CSS/main.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div widht="100%" height="200px">
+		<center>
+			<h1> Lindenmayer Systems</h1>
+			<code>
+				<form>
+					Iterations : <input type="text" name="iterator" id="iterator"> <br>
+					<strong>
+						&nbsp;&nbsp;Fractal Tree &nbsp;&nbsp;&nbsp;
+					</strong>
+					<input type="radio" value="1" name="fractal" onclick="selectFractal(1)">
+					<strong>
+						&nbsp;&nbsp;Dragon Fractal&nbsp;&nbsp;&nbsp;
+					</strong>
+			  		<input type="radio" value="2" name="fractal" onclick="selectFractal(2)">
+			  		<strong>
+			  			&nbsp;&nbsp;Ferc Fractal &nbsp;&nbsp;&nbsp;
+			  		</strong>
+			  		<input type="radio" value="3" name="fractal" onclick="selectFractal(3)">
+			  		<strong>
+			  			&nbsp;&nbsp;BendTree&nbsp;&nbsp;&nbsp;
+			  		</strong>
+			  		<input type="radio" value="3" name="fractal" onclick="selectFractal(4)"><br>			  		
+			  		<input type="button" name="button" value="Generate" onclick="resizeCanvas()">
+	  			</form>
+	  		</code>
+	 	</center>
+	</div>
+  	<canvas id="lCanvas" style="border:1px solid #000000;"></canvas>
+</body>
+<script type="text/javascript" src="./JS/main.js"></script>
+</html>
