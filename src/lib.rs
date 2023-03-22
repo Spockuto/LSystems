@@ -39,8 +39,7 @@ pub fn generate_canvas(fractal_type: u32, iterations: u32, color1: String, color
     let length = canvas_scaling.length * scale / iterations as f64;
     let (mut x, mut y) = (0.0, 0.0);
     let mut angle = lsystem.get_angle();
-    let angle_m = PI * angle / 180.0;
-    let angle_p = -1.0 * PI * angle / 180.0;
+    let angle_rad = -1.0 * PI * angle / 180.0;
 
     context
         .translate(
@@ -52,6 +51,7 @@ pub fn generate_canvas(fractal_type: u32, iterations: u32, color1: String, color
     context.move_to(0.0, 0.0);
     context.rotate(canvas_scaling.initial_angle).unwrap();
     let mut stack = vec![];
+
     for seq in sequence.chars() {
         match seq {
             'F' | 'A' | 'B' => {
@@ -61,10 +61,10 @@ pub fn generate_canvas(fractal_type: u32, iterations: u32, color1: String, color
                 context.stroke();
             }
             '+' => {
-                angle += angle_p;
+                angle += angle_rad;
             }
             '-' => {
-                angle += angle_m;
+                angle -= angle_rad;
             }
             '[' => {
                 stack.push(Line { x, y, angle });

@@ -1,13 +1,5 @@
-use std::borrow::Cow;
 use std::collections::HashMap;
-use std::f64;
 use std::f64::consts::PI;
-
-#[derive(Clone)]
-struct Rule {
-    identifier: char,
-    rule: Cow<'static, str>,
-}
 
 pub struct CanvasScaling {
     pub initial_angle: f64,
@@ -17,9 +9,9 @@ pub struct CanvasScaling {
 }
 
 struct LSystem {
-    variables: Cow<'static, str>,
-    axiom: Cow<'static, str>,
-    rules: Vec<Rule>,
+    variables: &'static str,
+    axiom: &'static str,
+    rules: HashMap<char, &'static str>,
     angle: f64,
     max_rounds: u32,
     canvas: CanvasScaling,
@@ -53,17 +45,9 @@ impl LSystemImpl<'_> {
         }
 
         let mut sequence = String::new();
-        let rules = self
-            .0
-            .rules
-            .clone()
-            .into_iter()
-            .map(|r| (r.identifier, r.rule))
-            .collect::<HashMap<_, Cow<'_, str>>>();
-
         for i in 0..iterations {
             if i == 0 {
-                sequence.insert_str(0, &self.0.axiom);
+                sequence.insert_str(0, self.0.axiom);
             } else {
                 let sequence_copy = sequence.to_string();
                 let mut insert_index = 0;
@@ -72,7 +56,7 @@ impl LSystemImpl<'_> {
                         insert_index += 1;
                         continue;
                     }
-                    let rule = rules.get(&identifier).unwrap();
+                    let rule = self.0.rules.get(&identifier).unwrap();
                     sequence.remove(insert_index);
                     sequence.insert_str(insert_index, rule);
                     insert_index += &rule.len();
@@ -93,18 +77,11 @@ impl LSystemImpl<'_> {
 
 lazy_static! {
     static ref BARNSLEY_FERN: LSystem = LSystem {
-        variables: Cow::Borrowed("XF"),
-        axiom: Cow::Borrowed("X"),
-        rules: vec![
-            Rule {
-                identifier: 'X',
-                rule: Cow::Borrowed("F-[[X]+X]+F[+FX]-X")
-            },
-            Rule {
-                identifier: 'F',
-                rule: Cow::Borrowed("FF")
-            }
-        ],
+        variables: "XF",
+        axiom: "X",
+        rules: vec![('X', "F-[[X]+X]+F[+FX]-X"), ('F', "FF"),]
+            .into_iter()
+            .collect(),
         angle: 22.5,
         max_rounds: 7,
         canvas: CanvasScaling {
@@ -118,18 +95,9 @@ lazy_static! {
 
 lazy_static! {
     static ref DRAGON_CURVE: LSystem = LSystem {
-        variables: Cow::Borrowed("XY"),
-        axiom: Cow::Borrowed("FX"),
-        rules: vec![
-            Rule {
-                identifier: 'X',
-                rule: Cow::Borrowed("X+YF+")
-            },
-            Rule {
-                identifier: 'Y',
-                rule: Cow::Borrowed("-FX-Y")
-            }
-        ],
+        variables: "XY",
+        axiom: "FX",
+        rules: vec![('X', "X+YF+"), ('Y', "-FX-Y")].into_iter().collect(),
         angle: 90.0,
         max_rounds: 12,
         canvas: CanvasScaling {
@@ -143,12 +111,14 @@ lazy_static! {
 
 lazy_static! {
     static ref SEGMENT_32: LSystem = LSystem {
-        variables: Cow::Borrowed("F"),
-        axiom: Cow::Borrowed("F+F+F+F"),
-        rules: vec![Rule {
-            identifier: 'F',
-            rule: Cow::Borrowed("-F+F-F-F+F+FF-F+F+FF+F-F-FF+FF-FF+F+F-FF-F-F+FF-F-F+F+F-F+")
-        }],
+        variables: "F",
+        axiom: "F+F+F+F",
+        rules: vec![(
+            'F',
+            "-F+F-F-F+F+FF-F+F+FF+F-F-FF+FF-FF+F+F-FF-F-F+FF-F-F+F+F-F+"
+        )]
+        .into_iter()
+        .collect(),
         angle: 90.0,
         max_rounds: 3,
         canvas: CanvasScaling {
@@ -162,12 +132,9 @@ lazy_static! {
 
 lazy_static! {
     static ref FRACTAL_PLANT: LSystem = LSystem {
-        variables: Cow::Borrowed("F"),
-        axiom: Cow::Borrowed("F"),
-        rules: vec![Rule {
-            identifier: 'F',
-            rule: Cow::Borrowed("FF-[-F+F+F]+[+F-F-F]")
-        }],
+        variables: "F",
+        axiom: "F",
+        rules: vec![('F', "FF-[-F+F+F]+[+F-F-F]")].into_iter().collect(),
         angle: 22.5,
         max_rounds: 5,
         canvas: CanvasScaling {
@@ -181,12 +148,9 @@ lazy_static! {
 
 lazy_static! {
     static ref KOCH_ISLAND: LSystem = LSystem {
-        variables: Cow::Borrowed("F"),
-        axiom: Cow::Borrowed("F+F+F+F"),
-        rules: vec![Rule {
-            identifier: 'F',
-            rule: Cow::Borrowed("F+F-F-FF+F+F-F")
-        }],
+        variables: "F",
+        axiom: "F+F+F+F",
+        rules: vec![('F', "F+F-F-FF+F+F-F")].into_iter().collect(),
         angle: 90.0,
         max_rounds: 4,
         canvas: CanvasScaling {
@@ -201,18 +165,11 @@ lazy_static! {
 // both A, B means move forward
 lazy_static! {
     static ref PEANO_GOSPER: LSystem = LSystem {
-        variables: Cow::Borrowed("AB"),
-        axiom: Cow::Borrowed("A"),
-        rules: vec![
-            Rule {
-                identifier: 'A',
-                rule: Cow::Borrowed("A-B--B+A++AA+B-")
-            },
-            Rule {
-                identifier: 'B',
-                rule: Cow::Borrowed("+A-BB--B-A++A+B")
-            }
-        ],
+        variables: "AB",
+        axiom: "A",
+        rules: vec![('A', "A-B--B+A++AA+B-"), ('B', "+A-BB--B-A++A+B")]
+            .into_iter()
+            .collect(),
         angle: 60.0,
         max_rounds: 5,
         canvas: CanvasScaling {
@@ -226,18 +183,11 @@ lazy_static! {
 
 lazy_static! {
     static ref HILBERT_CURVE: LSystem = LSystem {
-        variables: Cow::Borrowed("XY"),
-        axiom: Cow::Borrowed("X"),
-        rules: vec![
-            Rule {
-                identifier: 'X',
-                rule: Cow::Borrowed("+YF-XFX-FY+")
-            },
-            Rule {
-                identifier: 'Y',
-                rule: Cow::Borrowed("-XF+YFY+FX-")
-            }
-        ],
+        variables: "XY",
+        axiom: "X",
+        rules: vec![('X', "+YF-XFX-FY+"), ('Y', "-XF+YFY+FX-")]
+            .into_iter()
+            .collect(),
         angle: 90.0,
         max_rounds: 7,
         canvas: CanvasScaling {
@@ -251,22 +201,11 @@ lazy_static! {
 
 lazy_static! {
     static ref FREC_FRACTAL: LSystem = LSystem {
-        variables: Cow::Borrowed("XY"),
-        axiom: Cow::Borrowed("XYXYXYX+XYXYXYX+XYXYXYX+XYXYXYX"),
-        rules: vec![
-            Rule {
-                identifier: 'F',
-                rule: Cow::Borrowed("")
-            },
-            Rule {
-                identifier: 'X',
-                rule: Cow::Borrowed("FX+FX+FXFY-FY-")
-            },
-            Rule {
-                identifier: 'Y',
-                rule: Cow::Borrowed("+FX+FXFY-FY-FY")
-            }
-        ],
+        variables: "XY",
+        axiom: "XYXYXYX+XYXYXYX+XYXYXYX+XYXYXYX",
+        rules: vec![('F', ""), ('X', "FX+FX+FXFY-FY-"), ('Y', "+FX+FXFY-FY-FY")]
+            .into_iter()
+            .collect(),
         angle: 90.0,
         max_rounds: 4,
         canvas: CanvasScaling {
@@ -280,18 +219,11 @@ lazy_static! {
 
 lazy_static! {
     static ref SIERPINSKI_TRIANGLE: LSystem = LSystem {
-        variables: Cow::Borrowed("XF"),
-        axiom: Cow::Borrowed("FXF--FF--FF"),
-        rules: vec![
-            Rule {
-                identifier: 'X',
-                rule: Cow::Borrowed("--FXF++FXF++FXF--")
-            },
-            Rule {
-                identifier: 'F',
-                rule: Cow::Borrowed("FF")
-            }
-        ],
+        variables: "XF",
+        axiom: "FXF--FF--FF",
+        rules: vec![('X', "--FXF++FXF++FXF--"), ('F', "FF")]
+            .into_iter()
+            .collect(),
         angle: 60.0,
         max_rounds: 7,
         canvas: CanvasScaling {
@@ -305,12 +237,9 @@ lazy_static! {
 
 lazy_static! {
     static ref SIERPINSKI_SQUARE: LSystem = LSystem {
-        variables: Cow::Borrowed("F"),
-        axiom: Cow::Borrowed("F+F+F+F"),
-        rules: vec![Rule {
-            identifier: 'F',
-            rule: Cow::Borrowed("FF+F+F+F+FF")
-        }],
+        variables: "F",
+        axiom: "F+F+F+F",
+        rules: vec![('F', "FF+F+F+F+FF")].into_iter().collect(),
         angle: 90.0,
         max_rounds: 5,
         canvas: CanvasScaling {
@@ -324,34 +253,18 @@ lazy_static! {
 
 lazy_static! {
     static ref FRACTAL_PLANT_2: LSystem = LSystem {
-        variables: Cow::Borrowed("FVWXYZ"),
-        axiom: Cow::Borrowed("VZFFF"),
+        variables: "FVWXYZ",
+        axiom: "VZFFF",
         rules: vec![
-            Rule {
-                identifier: 'F',
-                rule: Cow::Borrowed("F")
-            },
-            Rule {
-                identifier: 'V',
-                rule: Cow::Borrowed("[+++W][---W]YV")
-            },
-            Rule {
-                identifier: 'W',
-                rule: Cow::Borrowed("+X[-W]Z")
-            },
-            Rule {
-                identifier: 'X',
-                rule: Cow::Borrowed("-W[+X]Z")
-            },
-            Rule {
-                identifier: 'Y',
-                rule: Cow::Borrowed("YZ")
-            },
-            Rule {
-                identifier: 'Z',
-                rule: Cow::Borrowed("[-FFF][+FFF]F")
-            }
-        ],
+            ('F', "F"),
+            ('V', "[+++W][---W]YV"),
+            ('W', "+X[-W]Z"),
+            ('X', "-W[+X]Z"),
+            ('Y', "YZ"),
+            ('Z', "[-FFF][+FFF]F")
+        ]
+        .into_iter()
+        .collect(),
         angle: 18.0,
         max_rounds: 11,
         canvas: CanvasScaling {
@@ -365,12 +278,9 @@ lazy_static! {
 
 lazy_static! {
     static ref KOCH_SNOWFLAKE: LSystem = LSystem {
-        variables: Cow::Borrowed("F"),
-        axiom: Cow::Borrowed("F++F++F"),
-        rules: vec![Rule {
-            identifier: 'F',
-            rule: Cow::Borrowed("F-F++F-F")
-        }],
+        variables: "F",
+        axiom: "F++F++F",
+        rules: vec![('F', "F-F++F-F")].into_iter().collect(),
         angle: 60.0,
         max_rounds: 6,
         canvas: CanvasScaling {
