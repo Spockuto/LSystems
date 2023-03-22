@@ -225,7 +225,6 @@ lazy_static! {
     };
 }
 
-
 lazy_static! {
     static ref SIERPINSKI_TRIANGLE: LSystem = LSystem {
         variables: Cow::Borrowed("XF"),
@@ -303,14 +302,13 @@ lazy_static! {
         angle: 18.0,
         max_rounds: 11,
         canvas: CanvasScaling {
-            initial_angle: - PI / 4.0,
+            initial_angle: -PI / 4.0,
             length: 0.15,
             height: 0.8,
             width: 0.5
         }
     };
 }
-
 
 lazy_static! {
     static ref KOCH_SNOWFLAKE: LSystem = LSystem {
@@ -330,7 +328,6 @@ lazy_static! {
         }
     };
 }
-
 
 fn expand_lsystem(system: &LSystem, iterations: u32) -> String {
     if iterations > system.max_rounds {
