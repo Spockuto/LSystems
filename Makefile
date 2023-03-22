@@ -7,6 +7,8 @@ deploy:
 	rm -rf /tmp/build/*
 	mkdir /tmp/build/pkg
 	cp -rp pkg/* /tmp/build/pkg/
+	rm -rf /tmp/build/target/
+	rm -rf /tmp/build/.gitignore
 	rm -rf /tmp/build/pkg/.gitignore
 	cp index.html /tmp/build/
 	cp index.css /tmp/build
