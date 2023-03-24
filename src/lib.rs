@@ -60,6 +60,11 @@ pub fn generate_canvas(fractal_type: u32, iterations: u32, color1: String, color
                 context.line_to(x, y);
                 context.stroke();
             }
+            'S' => {
+                x += length * angle.cos();
+                y += length * angle.sin();
+                context.move_to(x, y);
+            }
             '+' => {
                 angle += angle_rad;
             }

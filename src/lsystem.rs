@@ -23,17 +23,22 @@ impl LSystemImpl<'_> {
     pub fn new(fractal_type: u32) -> Self {
         let system = match fractal_type {
             1 => &*BARNSLEY_FERN,
-            2 => &*DRAGON_CURVE,
-            3 => &*SEGMENT_32,
-            4 => &*FRACTAL_PLANT,
-            5 => &*KOCH_ISLAND,
+            2 => &*FRACTAL_PLANT,
+            3 => &*FRACTAL_PLANT_2,
+            4 => &*DRAGON_CURVE,
+            5 => &*SEGMENT_32,
             6 => &*PEANO_GOSPER,
-            7 => &*HILBERT_CURVE,
-            8 => &*FREC_FRACTAL,
-            9 => &*SIERPINSKI_TRIANGLE,
-            10 => &*SIERPINSKI_SQUARE,
-            11 => &*FRACTAL_PLANT_2,
-            12 => &*KOCH_SNOWFLAKE,
+            7 => &*KOCH_SNOWFLAKE,
+            8 => &*KOCH_SNOWFLAKE_2,
+            9 => &*KOCH_SNOWFLAKE_3,
+            10 => &*QUAD_KOCH_ISLAND,
+            11 => &*QUAD_KOCH_ISLAND_2,
+            12 => &*ISLANDS,
+            13 => &*ISLANDS_2,
+            14 => &*SIERPINSKI_TRIANGLE,
+            15 => &*SIERPINSKI_SQUARE,
+            16 => &*HILBERT_CURVE,
+            17 => &*FREC_FRACTAL,
             _ => panic!("Type unknown"),
         };
         Self(system)
@@ -83,49 +88,12 @@ lazy_static! {
             .into_iter()
             .collect(),
         angle: 22.5,
-        max_rounds: 7,
+        max_rounds: 8,
         canvas: CanvasScaling {
             initial_angle: PI / 3.0,
-            length: 0.025,
+            length: 0.015,
             height: 1.0,
             width: 0.5
-        }
-    };
-}
-
-lazy_static! {
-    static ref DRAGON_CURVE: LSystem = LSystem {
-        variables: "XY",
-        axiom: "FX",
-        rules: vec![('X', "X+YF+"), ('Y', "-FX-Y")].into_iter().collect(),
-        angle: 90.0,
-        max_rounds: 12,
-        canvas: CanvasScaling {
-            initial_angle: 60.0,
-            length: 0.08,
-            height: 0.5,
-            width: 0.8
-        }
-    };
-}
-
-lazy_static! {
-    static ref SEGMENT_32: LSystem = LSystem {
-        variables: "F",
-        axiom: "F+F+F+F",
-        rules: vec![(
-            'F',
-            "-F+F-F-F+F+FF-F+F+FF+F-F-FF+FF-FF+F+F-FF-F-F+FF-F-F+F+F-F+"
-        )]
-        .into_iter()
-        .collect(),
-        angle: 90.0,
-        max_rounds: 3,
-        canvas: CanvasScaling {
-            initial_angle: 90.0,
-            length: 0.01,
-            height: 0.5,
-            width: 0.75
         }
     };
 }
@@ -147,17 +115,63 @@ lazy_static! {
 }
 
 lazy_static! {
-    static ref KOCH_ISLAND: LSystem = LSystem {
-        variables: "F",
-        axiom: "F+F+F+F",
-        rules: vec![('F', "F+F-F-FF+F+F-F")].into_iter().collect(),
-        angle: 90.0,
-        max_rounds: 4,
+    static ref FRACTAL_PLANT_2: LSystem = LSystem {
+        variables: "FVWXYZ",
+        axiom: "VZFFF",
+        rules: vec![
+            ('F', "F"),
+            ('V', "[+++W][---W]YV"),
+            ('W', "+X[-W]Z"),
+            ('X', "-W[+X]Z"),
+            ('Y', "YZ"),
+            ('Z', "[-FFF][+FFF]F")
+        ]
+        .into_iter()
+        .collect(),
+        angle: 18.0,
+        max_rounds: 12,
         canvas: CanvasScaling {
-            initial_angle: 90.0,
-            length: 0.015,
+            initial_angle: -PI / 4.0,
+            length: 0.15,
+            height: 0.9,
+            width: 0.5
+        }
+    };
+}
+
+lazy_static! {
+    static ref DRAGON_CURVE: LSystem = LSystem {
+        variables: "XY",
+        axiom: "FX",
+        rules: vec![('X', "X+YF+"), ('Y', "-FX-Y")].into_iter().collect(),
+        angle: 90.0,
+        max_rounds: 14,
+        canvas: CanvasScaling {
+            initial_angle: 30.0,
+            length: 0.06,
             height: 0.5,
             width: 0.8
+        }
+    };
+}
+
+lazy_static! {
+    static ref SEGMENT_32: LSystem = LSystem {
+        variables: "F",
+        axiom: "F+F+F+F",
+        rules: vec![(
+            'F',
+            "-F+F-F-F+F+FF-F+F+FF+F-F-FF+FF-FF+F+F-FF-F-F+FF-F-F+F+F-F+"
+        )]
+        .into_iter()
+        .collect(),
+        angle: 90.0,
+        max_rounds: 3,
+        canvas: CanvasScaling {
+            initial_angle: 90.0,
+            length: 0.014,
+            height: 0.55,
+            width: 0.75
         }
     };
 }
@@ -171,48 +185,130 @@ lazy_static! {
             .into_iter()
             .collect(),
         angle: 60.0,
-        max_rounds: 5,
+        max_rounds: 6,
         canvas: CanvasScaling {
             initial_angle: 60.0,
-            length: 0.035,
-            height: 0.3,
-            width: 0.75
+            length: 0.025,
+            height: 0.35,
+            width: 0.9
         }
     };
 }
 
 lazy_static! {
-    static ref HILBERT_CURVE: LSystem = LSystem {
-        variables: "XY",
-        axiom: "X",
-        rules: vec![('X', "+YF-XFX-FY+"), ('Y', "-XF+YFY+FX-")]
-            .into_iter()
-            .collect(),
-        angle: 90.0,
-        max_rounds: 7,
+    static ref KOCH_SNOWFLAKE: LSystem = LSystem {
+        variables: "F",
+        axiom: "F++F++F",
+        rules: vec![('F', "F-F++F-F")].into_iter().collect(),
+        angle: 60.0,
+        max_rounds: 6,
         canvas: CanvasScaling {
-            initial_angle: -90.0,
-            length: 0.035,
-            height: 0.7,
-            width: 0.3
+            initial_angle: -60.0,
+            length: 0.014,
+            height: 0.75,
+            width: 0.15
         }
     };
 }
 
 lazy_static! {
-    static ref FREC_FRACTAL: LSystem = LSystem {
-        variables: "XY",
-        axiom: "XYXYXYX+XYXYXYX+XYXYXYX+XYXYXYX",
-        rules: vec![('F', ""), ('X', "FX+FX+FXFY-FY-"), ('Y', "+FX+FXFY-FY-FY")]
+    static ref KOCH_SNOWFLAKE_2: LSystem = LSystem {
+        variables: "F",
+        axiom: "F+F+F+F",
+        rules: vec![('F', "F-F+F+F-F")].into_iter().collect(),
+        angle: 90.0,
+        max_rounds: 6,
+        canvas: CanvasScaling {
+            initial_angle: PI / 3.0,
+            length: 0.007,
+            height: 0.25,
+            width: 0.8
+        }
+    };
+}
+
+lazy_static! {
+    static ref KOCH_SNOWFLAKE_3: LSystem = LSystem {
+        variables: "F",
+        axiom: "F",
+        rules: vec![('F', "F-F+F+F-F")].into_iter().collect(),
+        angle: 85.0,
+        max_rounds: 6,
+        canvas: CanvasScaling {
+            initial_angle: -PI * 10.0 / 180.0,
+            length: 0.015,
+            height: 0.75,
+            width: 0.9
+        }
+    };
+}
+
+lazy_static! {
+    static ref QUAD_KOCH_ISLAND: LSystem = LSystem {
+        variables: "F",
+        axiom: "F+F+F+F",
+        rules: vec![('F', "F+F-F-FF+F+F-F")].into_iter().collect(),
+        angle: 90.0,
+        max_rounds: 5,
+        canvas: CanvasScaling {
+            initial_angle: 90.0,
+            length: 0.0085,
+            height: 0.55,
+            width: 0.8
+        }
+    };
+}
+
+lazy_static! {
+    static ref QUAD_KOCH_ISLAND_2: LSystem = LSystem {
+        variables: "F",
+        axiom: "F+F+F+F",
+        rules: vec![('F', "F+FF-FF-F-F+F+FF-F-F+F+FF+FF-F")]
             .into_iter()
             .collect(),
         angle: 90.0,
         max_rounds: 4,
         canvas: CanvasScaling {
-            initial_angle: 45.0,
-            length: 0.02,
+            initial_angle: 90.0,
+            length: 0.008,
+            height: 0.55,
+            width: 0.8
+        }
+    };
+}
+
+lazy_static! {
+    static ref ISLANDS: LSystem = LSystem {
+        variables: "FS",
+        axiom: "F+F+F+F",
+        rules: vec![('F', "F-SFF+F+FF+F-S-FFF-F+F+F-FFFF"), ('S', "SSSSSSSS")]
+            .into_iter()
+            .collect(),
+        angle: 90.0,
+        max_rounds: 4,
+        canvas: CanvasScaling {
+            initial_angle: PI / 2.0,
+            length: 0.002,
             height: 0.3,
-            width: 0.85
+            width: 0.7
+        }
+    };
+}
+
+lazy_static! {
+    static ref ISLANDS_2: LSystem = LSystem {
+        variables: "FS",
+        axiom: "F+F+F+F",
+        rules: vec![('F', "F-SF+FF+F+FF-S-FF+SF-FF-F-FF+S+FFF"), ('S', "SSSSSS")]
+            .into_iter()
+            .collect(),
+        angle: 90.0,
+        max_rounds: 4,
+        canvas: CanvasScaling {
+            initial_angle: PI / 2.0,
+            length: 0.007,
+            height: 0.35,
+            width: 0.8
         }
     };
 }
@@ -225,10 +321,10 @@ lazy_static! {
             .into_iter()
             .collect(),
         angle: 60.0,
-        max_rounds: 7,
+        max_rounds: 8,
         canvas: CanvasScaling {
             initial_angle: -60.0,
-            length: 0.025,
+            length: 0.022,
             height: 0.01,
             width: 0.01
         }
@@ -244,7 +340,7 @@ lazy_static! {
         max_rounds: 5,
         canvas: CanvasScaling {
             initial_angle: -90.0,
-            length: 0.025,
+            length: 0.03,
             height: 0.8,
             width: 0.1
         }
@@ -252,42 +348,37 @@ lazy_static! {
 }
 
 lazy_static! {
-    static ref FRACTAL_PLANT_2: LSystem = LSystem {
-        variables: "FVWXYZ",
-        axiom: "VZFFF",
-        rules: vec![
-            ('F', "F"),
-            ('V', "[+++W][---W]YV"),
-            ('W', "+X[-W]Z"),
-            ('X', "-W[+X]Z"),
-            ('Y', "YZ"),
-            ('Z', "[-FFF][+FFF]F")
-        ]
-        .into_iter()
-        .collect(),
-        angle: 18.0,
-        max_rounds: 11,
+    static ref HILBERT_CURVE: LSystem = LSystem {
+        variables: "XY",
+        axiom: "X",
+        rules: vec![('X', "+YF-XFX-FY+"), ('Y', "-XF+YFY+FX-")]
+            .into_iter()
+            .collect(),
+        angle: 90.0,
+        max_rounds: 8,
         canvas: CanvasScaling {
-            initial_angle: -PI / 4.0,
-            length: 0.1,
-            height: 0.8,
-            width: 0.5
+            initial_angle: -90.0,
+            length: 0.035,
+            height: 0.9,
+            width: 0.3
         }
     };
 }
 
 lazy_static! {
-    static ref KOCH_SNOWFLAKE: LSystem = LSystem {
-        variables: "F",
-        axiom: "F++F++F",
-        rules: vec![('F', "F-F++F-F")].into_iter().collect(),
-        angle: 60.0,
-        max_rounds: 6,
+    static ref FREC_FRACTAL: LSystem = LSystem {
+        variables: "XY",
+        axiom: "XYXYXYX+XYXYXYX+XYXYXYX+XYXYXYX",
+        rules: vec![('F', ""), ('X', "FX+FX+FXFY-FY-"), ('Y', "+FX+FXFY-FY-FY")]
+            .into_iter()
+            .collect(),
+        angle: 90.0,
+        max_rounds: 5,
         canvas: CanvasScaling {
-            initial_angle: -60.0,
-            length: 0.01,
-            height: 0.7,
-            width: 0.15
+            initial_angle: 45.0,
+            length: 0.017,
+            height: 0.15,
+            width: 0.1
         }
     };
 }
