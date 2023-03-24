@@ -1,0 +1,150 @@
+.container {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    align-items: center;
+}
+
+.column-1 {
+    flex-basis: 25%;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.column-2 {
+    flex-basis: 75%;
+    height: 100vh;
+}
+
+.no-outline:focus {
+    outline: none;
+}
+
+.box {
+    display: block;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    color: #444;
+    background-color: #EFEFEF;
+    font-weight: bolder;
+}
+
+p {
+    line-height: 1.5em;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+input {
+    border-top-style: hidden;
+    border-right-style: hidden;
+    border-left-style: hidden;
+    border-bottom-style: groove;
+    line-height: 1.5em;
+    color: #444;
+    background-color: #EFEFEF;
+}
+
+
+input[type=checkbox] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+
+input[type=button],
+input[type=submit] {
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 3px;
+    padding: 12px 24px;
+    border: 0;
+    color: #3a4149;
+    background: #e7ebee;
+    line-height: 1.15;
+    font-size: 16px;
+}
+
+input[type=button]:hover,
+input[type=submit]:hover {
+    transition: all .1s ease;
+    box-shadow: 0 0 0 0 #fff, 0 0 0 3px #bada55;
+}
+
+label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 50px;
+    height: 25px;
+    background: grey;
+    display: inline-block;
+    border-radius: 25px;
+    position: relative;
+}
+
+label:after {
+    content: '';
+    position: absolute;
+    top: 1.5px;
+    left: 1.5px;
+    width: 22.5px;
+    height: 22.5px;
+    background: #fff;
+    border-radius: 22.5px;
+    transition: 0.3s;
+}
+
+input:checked+label {
+    background: #bada55;
+}
+
+input:checked+label:after {
+    left: calc(100% - 1.5px);
+    transform: translateX(-100%);
+}
+
+label:active:after {
+    width: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .column-2 {
+        width: 100vw;
+    }
+
+    h1 {
+        font-size: larger;
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+select {
+    background-color: transparent;
+    border: none;
+    padding: 0 1em 0 0;
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    line-height: inherit;
+}

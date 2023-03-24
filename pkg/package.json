@@ -1,0 +1,17 @@
+{
+  "name": "lsystems",
+  "collaborators": [
+    "Spockuto"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "lsystems_bg.wasm",
+    "lsystems.js",
+    "lsystems.d.ts"
+  ],
+  "module": "lsystems.js",
+  "types": "lsystems.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
